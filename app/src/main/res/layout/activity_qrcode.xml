@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/qrButtonGenerate"
-            android:text="Generate"
+            android:text="Generate QR code"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/inputField"
             />
@@ -30,18 +30,36 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/qrButtonScan"
-            android:text="Scan"
+            android:id="@+id/dataMatrixButtonGenerate"
+            android:text="Generate Data Matrix code"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/qrButtonGenerate"
+            />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/qrButtonScan"
+            android:text="Scan QR code"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/dataMatrixButtonGenerate"
+            />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/dataMatrixButtonScan"
+            android:text="Scan Data Matrix code"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/qrButtonScan"
             />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/qrImageView"
+            android:id="@+id/codeImageView"
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/qrButtonScan"/>
+            android:layout_below="@+id/dataMatrixButtonScan"/>
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

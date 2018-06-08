@@ -22,8 +22,10 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 public class QRCodeActivity extends AppCompatActivity {
     private EditText inputField;
     private Button qrButtonGenerate;
-    private Button getQrButtonScan;
-    private ImageView qrImageView;
+    private Button dataMatrixButtonGenerate;
+    private Button qrButtonScan;
+    private Button dataMatrixButtonScan;
+    private ImageView codeImageView;
 
     final Activity activity = this;
 
@@ -34,22 +36,24 @@ public class QRCodeActivity extends AppCompatActivity {
 
         inputField = findViewById(R.id.inputField);
         qrButtonGenerate = findViewById(R.id.qrButtonGenerate);
-        getQrButtonScan = findViewById(R.id.qrButtonScan);
-        qrImageView = findViewById(R.id.qrImageView);
+        dataMatrixButtonGenerate = findViewById(R.id.dataMatrixButtonGenerate);
+        qrButtonScan = findViewById(R.id.qrButtonScan);
+        dataMatrixButtonScan = findViewById(R.id.dataMatrixButtonScan);
+        codeImageView = findViewById(R.id.codeImageView);
 
         qrButtonGenerate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String text = inputField.getText().toString().trim();
+                String qrInput = inputField.getText().toString().trim();
 
-                if (text != null){
+                if (qrInput != null){
                     MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
                     try{
-                        BitMatrix bitMatrix = multiFormatWriter.encode(text,
+                        BitMatrix bitMatrix = multiFormatWriter.encode(qrInput,
                                 BarcodeFormat.QR_CODE, 500, 500);
                         BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
                         Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
-                        qrImageView.setImageBitmap(bitmap);
+                        codeImageView.setImageBitmap(bitmap);
                     }catch (WriterException e){
                         e.printStackTrace();
                     }
@@ -57,12 +61,47 @@ public class QRCodeActivity extends AppCompatActivity {
             }
         });
 
-        getQrButtonScan.setOnClickListener(new View.OnClickListener() {
+        dataMatrixButtonGenerate.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                String dataMatrixInput = inputField.getText().toString().trim();
+                if (dataMatrixInput != null){
+                    MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+                    try{
+                        BitMatrix bitMatrix = multiFormatWriter.encode(dataMatrixInput,
+                                BarcodeFormat.DATA_MATRIX, 500, 500);
+                        BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+                        Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
+                        codeImageView.setImageBitmap(
+                                Bitmap.createScaledBitmap(
+                                        bitmap, 500, 500, false));
+                    }catch (WriterException e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        qrButtonScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 IntentIntegrator intentIntegrator = new IntentIntegrator(activity);
                 intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES);
-                intentIntegrator.setPrompt("Scanning");
+                intentIntegrator.setPrompt("Scanning QR code");
+                intentIntegrator.setCameraId(0);
+                intentIntegrator.setBeepEnabled(false);
+                intentIntegrator.setBarcodeImageEnabled(false);
+                intentIntegrator.initiateScan();
+            }
+        });
+
+        dataMatrixButtonScan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentIntegrator intentIntegrator = new IntentIntegrator(activity);
+                intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.DATA_MATRIX_TYPES);
+                intentIntegrator.setPrompt("Scanning Data Matrix code");
                 intentIntegrator.setCameraId(0);
                 intentIntegrator.setBeepEnabled(false);
                 intentIntegrator.setBarcodeImageEnabled(false);
@@ -77,7 +116,7 @@ public class QRCodeActivity extends AppCompatActivity {
         if (result != null){
 
             if (result.getContents() == null){
-                Toast.makeText(this, "You cancelled the scanning", Toast.LENGTH_LONG);
+                Toast.makeText(this, "You cancelled the scanning", Toast.LENGTH_LONG).show();
             }else{
                 Toast.makeText(this, result.getContents(), Toast.LENGTH_LONG).show();
             }
