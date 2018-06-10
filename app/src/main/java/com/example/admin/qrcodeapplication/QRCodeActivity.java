@@ -46,7 +46,7 @@ public class QRCodeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String qrInput = inputField.getText().toString().trim();
 
-                if (qrInput != null){
+                if (qrInput.length() > 0){
                     MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
                     try{
                         BitMatrix bitMatrix = multiFormatWriter.encode(qrInput,
@@ -57,6 +57,8 @@ public class QRCodeActivity extends AppCompatActivity {
                     }catch (WriterException e){
                         e.printStackTrace();
                     }
+                }else{
+                    makeToast("Please enter text");
                 }
             }
         });
@@ -66,7 +68,7 @@ public class QRCodeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String dataMatrixInput = inputField.getText().toString().trim();
-                if (dataMatrixInput != null){
+                if (dataMatrixInput.length() > 0){
                     MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
                     try{
                         BitMatrix bitMatrix = multiFormatWriter.encode(dataMatrixInput,
@@ -79,6 +81,8 @@ public class QRCodeActivity extends AppCompatActivity {
                     }catch (WriterException e){
                         e.printStackTrace();
                     }
+                }else{
+                    makeToast("Please enter text");
                 }
             }
         });
@@ -110,6 +114,9 @@ public class QRCodeActivity extends AppCompatActivity {
         });
     }
 
+    protected  void makeToast(String toastText){
+        Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+    }
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
 
